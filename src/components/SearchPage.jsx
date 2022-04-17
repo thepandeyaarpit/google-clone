@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Search from './Search';
 import SearchIcon from '@material-ui/icons/Search';
@@ -8,8 +8,16 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import RoomIcon from '@material-ui/icons/Room';
 import './SearchPage.css';
+import {useStateValue} from '../StateProvider.jsx';
+import useGoogleSearch from '../useGoogleSearch.jsx';
 
 function SearchPage(){
+
+    const [{term}] = useStateValue();
+    
+    const { data } = useGoogleSearch(term);
+    console.log(term);
+
     return(
         <div className='searchPage'>
             <div className='searchPage__header'>
@@ -58,6 +66,36 @@ function SearchPage(){
                     </div>
                 </div>
             </div>
+
+            {
+                term &&(
+
+            <div className='searchPage__results'>
+                <p className='searchPage__resultCount'>
+                    About {data?.searchInformation.formattedTotalResults} results ({data?.searchInformation.formattedSearchTime}) for {term}
+                </p>
+
+
+                {
+                    data?.items.map((item)=>(
+                         <div className="searchPage__result">
+                            <a href={item.link} className="searchPage__resultLink">
+                            {item.pagemap?.cse_image?.length > 0 && item.pagemap?.cse_image[0]?.src && (
+                                <img src={item.pagemap?.cse_image[0]?.src} className='searchPage__resultImage' />
+                            )}
+                                
+                                {item.displayLink}
+                            </a>
+                            <a href={item.link} className="searchPage__resultTitle" >
+                                <h2>{item.title}</h2>
+                            </a>
+                            <p className="searchPage__resultdescription">{item.snippet}</p>
+                        </div>
+                    ))
+                }
+
+            </div>)
+            }
         </div>
     )
 }
