@@ -1,3 +1,6 @@
+here is the live link of this project
+https://clonewithgoogle.netlify.app
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
